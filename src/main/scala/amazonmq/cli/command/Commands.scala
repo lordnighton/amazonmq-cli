@@ -149,6 +149,12 @@ abstract class Commands extends PrintStackTraceExecutionProcessor {
   def moveMessages(from: String, to: String, selector: Option[String]): Int = {
     var messagesMoved = 0
     var timeoutReached = false
+    
+    info(s"=== DEBUG ===")
+    info(s"Batch size = " + AmazonMQCLI.Config.getInt("messages.receive.batch-size"))
+    info(s"Timeout = " + AmazonMQCLI.Config.getLong("messages.receive.timeout"))
+    info(s"=== DEBUG ===")
+    
     while (!timeoutReached) {
       withSession((session: Session) ⇒ {
         val fromConsumer = session.createConsumer(session.createQueue(from), selector.getOrElse(null)) //scalastyle:ignore
@@ -165,6 +171,7 @@ abstract class Commands extends PrintStackTraceExecutionProcessor {
         "."
       })
     }
+    info(s"Messages moved: $messagesMoved")
     messagesMoved
   }
 
