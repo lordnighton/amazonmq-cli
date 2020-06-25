@@ -149,12 +149,12 @@ abstract class Commands extends PrintStackTraceExecutionProcessor {
   def moveMessages(from: String, to: String, selector: Option[String]): Int = {
     var messagesMoved = 0
     var timeoutReached = false
-    
-    info(s"=== DEBUG ===")
-    info(s"Batch size = " + AmazonMQCLI.Config.getInt("messages.receive.batch-size"))
-    info(s"Timeout = " + AmazonMQCLI.Config.getLong("messages.receive.timeout"))
-    info(s"=== DEBUG ===")
-    
+
+    println("=== DEBUG ===")
+    println("Batch size = " + AmazonMQCLI.Config.getInt("messages.receive.batch-size"))
+    println("Timeout = " + AmazonMQCLI.Config.getLong("messages.receive.timeout"))
+    println("=== DEBUG ===")
+
     while (!timeoutReached) {
       withSession((session: Session) ⇒ {
         val fromConsumer = session.createConsumer(session.createQueue(from), selector.getOrElse(null)) //scalastyle:ignore
@@ -171,11 +171,12 @@ abstract class Commands extends PrintStackTraceExecutionProcessor {
         "."
       })
     }
-    info(s"Messages moved: $messagesMoved")
+    println("Messages moved: " + messagesMoved)
     messagesMoved
   }
 
   def withEveryMessage(queue: String, selector: Option[String], destinationQueues: Seq[String], resultMessage: String, callback: (Message) ⇒ Unit): String = {
+    println("=== DEBUG (first) ===")
     withWebClient((webClient: WebClient) ⇒ {
       validateQueueExists(webClient, queue)
       val tempQueue = s"amazonmq-cli.$queue.temp.${new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date())}.${UUID.randomUUID().toString()}"
@@ -197,7 +198,8 @@ abstract class Commands extends PrintStackTraceExecutionProcessor {
       if (messagesProcessed > 0) {
         removeQueue(webClient, tempQueue)
       }
-      info(s"$resultMessage: $totalMessages")
+      println("=== DEBUG (last) ===")
+      info(s"$resultMessage === $totalMessages")
     })
   }
 

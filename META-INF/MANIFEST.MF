@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: amazonmq-cli
+Implementation-Version: 0.2.1
+Specification-Vendor: com.antonwierenga
+Specification-Title: amazonmq-cli
+Implementation-Vendor-Id: com.antonwierenga
+Specification-Version: 0.2.1
+Implementation-Vendor: com.antonwierenga
+Main-Class: amazonmq.cli.AmazonMQCLI
+
